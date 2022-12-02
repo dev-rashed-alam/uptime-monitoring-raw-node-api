@@ -1,4 +1,13 @@
 {
+  "name": "uptime-monitoring-raw-node-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index"
+  },
+  "keywords": [],
+  "author": "Rashed Alam",
+  "description": "",
   "devDependencies": {
     "eslint": "^8.2.0",
     "eslint-config-airbnb-base": "15.0.0",
