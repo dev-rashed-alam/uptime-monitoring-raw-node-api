@@ -23,7 +23,7 @@ handler._users.get = (requestProperties, callback) => {
             ? queryString.phone
             : false;
     if (phoneNumber) {
-        data.read('user', phoneNumber, (err, user) => {
+        data.read('users', phoneNumber, (err, user) => {
             const payload = { ...parseJson(user) };
             if (!err) {
                 delete payload.password;
@@ -61,7 +61,7 @@ handler._users.post = (requestProperties, callback) => {
         typeof body.tosAgreement === 'boolean' && body.tosAgreement ? body.tosAgreement : false;
 
     if (firstName && lastName && phone && password && tosAgreement) {
-        data.read('user', phone, (err) => {
+        data.read('users', phone, (err) => {
             if (err) {
                 const userObj = {
                     firstName,
@@ -71,7 +71,7 @@ handler._users.post = (requestProperties, callback) => {
                     tosAgreement,
                 };
 
-                data.create('user', phone, userObj, (err1) => {
+                data.create('users', phone, userObj, (err1) => {
                     if (!err1) {
                         callback(200, {
                             message: 'User Created Successfully!',
@@ -113,7 +113,7 @@ handler._users.put = (requestProperties, callback) => {
             : false;
     if (phone) {
         if (firstName || lastName || password) {
-            data.read('user', phone, (err, user) => {
+            data.read('users', phone, (err, user) => {
                 const userData = { ...parseJson(user) };
                 if (!err) {
                     if (firstName) {
@@ -126,7 +126,7 @@ handler._users.put = (requestProperties, callback) => {
                         userData.phone = phone;
                     }
 
-                    data.update('user', phone, userData, (err1) => {
+                    data.update('users', phone, userData, (err1) => {
                         if (!err1) {
                             callback(200, {
                                 message: 'User Updated Successfully!',
@@ -163,7 +163,7 @@ handler._users.delete = (requestProperties, callback) => {
             ? queryString.phone
             : false;
     if (phoneNumber) {
-        data.delete('user', phoneNumber, (err) => {
+        data.delete('users', phoneNumber, (err) => {
             if (!err) {
                 callback(200, {
                     message: 'User deleted!',
