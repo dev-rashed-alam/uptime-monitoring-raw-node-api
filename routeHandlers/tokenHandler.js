@@ -146,4 +146,19 @@ handler._token.delete = (requestProperties, callback) => {
     }
 };
 
+handler._token.verify = (tokenId, id, callback) => {
+    data.read('tokens', tokenId, (err, tokeData) => {
+        const tokenObj = { ...parseJson(tokeData) };
+        if (!err) {
+            if (id === tokenObj.id) {
+                callback(true);
+            } else {
+                callback(false);
+            }
+        } else {
+            callback(false);
+        }
+    });
+};
+
 module.exports = handler;
