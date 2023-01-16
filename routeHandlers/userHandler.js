@@ -1,6 +1,7 @@
 const { hash } = require('../helpers/utils');
 const data = require('../lib/data');
 const { parseJson } = require('../helpers/utils');
+const { _token } = require('./tokenHandler');
 
 const handler = {};
 
@@ -28,23 +29,25 @@ handler._users.get = (requestProperties, callback) => {
             typeof headers.token === 'string' && headers.token.length === 20
                 ? headers.token
                 : false;
-        if (tokenId) {
-            data.read('users', phoneNumber, (err, user) => {
-                const payload = { ...parseJson(user) };
-                if (!err) {
-                    delete payload.password;
-                    callback(200, payload);
-                } else {
-                    callback(404, {
-                        message: 'User not found!',
-                    });
-                }
-            });
-        } else {
-            callback(403, {
-                message: 'Authentication failure!',
-            });
-        }
+        _token.verify(tokenId, phoneNumber, (isTokenValid) => {
+            if (isTokenValid) {
+                data.read('users', phoneNumber, (err, user) => {
+                    const payload = { ...parseJson(user) };
+                    if (!err) {
+                        delete payload.password;
+                        callback(200, payload);
+                    } else {
+                        callback(404, {
+                            message: 'User not found!',
+                        });
+                    }
+                });
+            } else {
+                callback(403, {
+                    message: 'Authentication failure!',
+                });
+            }
+        });
     } else {
         callback(404, {
             message: 'User not found!',
@@ -129,42 +132,44 @@ handler._users.put = (requestProperties, callback) => {
                 typeof headers.token === 'string' && headers.token.length === 20
                     ? headers.token
                     : false;
-            if (tokenId) {
-                data.read('users', phone, (err, user) => {
-                    const userData = { ...parseJson(user) };
-                    if (!err) {
-                        if (firstName) {
-                            userData.firstName = firstName;
-                        }
-                        if (lastName) {
-                            userData.lastName = lastName;
-                        }
-                        if (phone) {
-                            userData.phone = phone;
-                        }
-
-                        data.update('users', phone, userData, (err1) => {
-                            if (!err1) {
-                                callback(200, {
-                                    message: 'User Updated Successfully!',
-                                });
-                            } else {
-                                callback(500, {
-                                    error: 'Unable to update user!',
-                                });
+            _token.verify(tokenId, phone, (isTokenValid) => {
+                if (isTokenValid) {
+                    data.read('users', phone, (err, user) => {
+                        const userData = { ...parseJson(user) };
+                        if (!err) {
+                            if (firstName) {
+                                userData.firstName = firstName;
                             }
-                        });
-                    } else {
-                        callback(404, {
-                            error: 'user not found!',
-                        });
-                    }
-                });
-            } else {
-                callback(403, {
-                    message: 'Authentication failure!',
-                });
-            }
+                            if (lastName) {
+                                userData.lastName = lastName;
+                            }
+                            if (phone) {
+                                userData.phone = phone;
+                            }
+
+                            data.update('users', phone, userData, (err1) => {
+                                if (!err1) {
+                                    callback(200, {
+                                        message: 'User Updated Successfully!',
+                                    });
+                                } else {
+                                    callback(500, {
+                                        error: 'Unable to update user!',
+                                    });
+                                }
+                            });
+                        } else {
+                            callback(404, {
+                                error: 'user not found!',
+                            });
+                        }
+                    });
+                } else {
+                    callback(403, {
+                        message: 'Authentication failure!',
+                    });
+                }
+            });
         } else {
             callback(400, {
                 error: 'field missing',
@@ -190,23 +195,25 @@ handler._users.delete = (requestProperties, callback) => {
             typeof headers.token === 'string' && headers.token.length === 20
                 ? headers.token
                 : false;
-        if (tokenId) {
-            data.delete('users', phoneNumber, (err) => {
-                if (!err) {
-                    callback(200, {
-                        message: 'User deleted!',
-                    });
-                } else {
-                    callback(404, {
-                        message: 'Unable to delete user!',
-                    });
-                }
-            });
-        } else {
-            callback(403, {
-                message: 'Authentication failure!',
-            });
-        }
+        _token.verify(tokenId, phoneNumber, (isTokenValid) => {
+            if (isTokenValid) {
+                data.delete('users', phoneNumber, (err) => {
+                    if (!err) {
+                        callback(200, {
+                            message: 'User deleted!',
+                        });
+                    } else {
+                        callback(404, {
+                            message: 'Unable to delete user!',
+                        });
+                    }
+                });
+            } else {
+                callback(403, {
+                    message: 'Authentication failure!',
+                });
+            }
+        });
     } else {
         callback(404, {
             message: 'User not found!',

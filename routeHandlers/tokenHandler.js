@@ -146,11 +146,11 @@ handler._token.delete = (requestProperties, callback) => {
     }
 };
 
-handler._token.verify = (tokenId, id, callback) => {
+handler._token.verify = (tokenId, phone, callback) => {
     data.read('tokens', tokenId, (err, tokeData) => {
         const tokenObj = { ...parseJson(tokeData) };
         if (!err) {
-            if (id === tokenObj.id) {
+            if (phone === tokenObj.phone && tokenObj.expires > Date.now()) {
                 callback(true);
             } else {
                 callback(false);

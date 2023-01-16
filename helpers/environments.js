@@ -4,12 +4,14 @@ environments.stagging = {
     port: 300,
     envName: 'stagging',
     secretKey: 'node-js-stagging',
+    maxChecks: 5,
 };
 
 environments.production = {
     port: 5000,
     envName: 'production',
     secretKey: 'node-js-production',
+    maxChecks: 5,
 };
 
 const currentEnvironment =
