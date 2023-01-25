@@ -1,4 +1,4 @@
-const { hash, createRandomString } = require('../helpers/utils');
+const { createRandomString } = require('../helpers/utils');
 const data = require('../lib/data');
 const { parseJson } = require('../helpers/utils');
 const { _token } = require('./tokenHandler');

@@ -5,6 +5,11 @@ environments.stagging = {
     envName: 'stagging',
     secretKey: 'node-js-stagging',
     maxChecks: 5,
+    twilio: {
+        fromPhone: '+13149484947',
+        authToken: '2635746fd5f36e8ae85aeb7c859f8be1',
+        accountSID: 'AC8d9546aa19f6b9fc703aad2a6fa53f03',
+    },
 };
 
 environments.production = {
@@ -12,6 +17,11 @@ environments.production = {
     envName: 'production',
     secretKey: 'node-js-production',
     maxChecks: 5,
+    twilio: {
+        fromPhone: '+13149484947',
+        authToken: '2635746fd5f36e8ae85aeb7c859f8be1',
+        accountSID: 'AC8d9546aa19f6b9fc703aad2a6fa53f03',
+    },
 };
 
 const currentEnvironment =

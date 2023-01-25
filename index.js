@@ -1,6 +1,11 @@
 const http = require('http');
 const { handleReqRes } = require('./helpers/handleReqRes');
 const environment = require('./helpers/environments');
+const { sendTwiloSms } = require('./helpers/notification');
+
+sendTwiloSms('01852346841', 'Test Messaage', (err) => {
+    console.log('SMS error', err);
+});
 
 const app = {};
 
